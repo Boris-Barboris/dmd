@@ -7596,10 +7596,12 @@ extern (C++) final class IsExp : Expression
             case TOKfunction:
             case TOKparameters:
                 {
-                    if (targ.ty != Tfunction)
+                    if (targ.ty == Tfunction)
+                        tded = targ;
+                    else if (targ.ty == Tpointer && (cast(TypePointer)targ).next.ty == Tfunction)
+                        tded = (cast(TypePointer)targ).next;
+                    else
                         goto Lno;
-                    tded = targ;
-
                     /* Generate tuple from function parameter types.
                      */
                     assert(tded.ty == Tfunction);
